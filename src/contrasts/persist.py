@@ -48,7 +48,7 @@ class Persist:
         for column in data.columns:
             string = data[column].to_json(orient='split')
             dictionary = json.loads(string)
-            names.append(dictionary['name'])
+            names.append(int(dictionary['name']))
             blocks.append(dictionary['data'])
 
         nodes = {'names': names, 'data': blocks}
