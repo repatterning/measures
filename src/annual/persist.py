@@ -65,16 +65,16 @@ class Persist:
 
         return attributes
 
-    def exc(self, data: pd.DataFrame, ts_id: int) -> str:
+    def exc(self, splits: pd.DataFrame, ts_id: int) -> str:
         """
 
-        :param data:
+        :param splits:
         :param ts_id:
         :return:
         """
 
         # Nodes vis-à-vis the data fields only
-        nodes = self.__get_nodes(data=data.copy())
+        nodes = self.__get_nodes(data=splits.copy())
 
         # Attributes
         attributes = self.__get_attributes(ts_id=ts_id)
