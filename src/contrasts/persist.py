@@ -62,11 +62,10 @@ class Persist:
         :return:
         """
 
-        attributes: pd.DataFrame = self.__reference.loc[self.__reference['catchment_id'] == catchment_id, :]
-        attributes.drop_duplicates(ignore_index=True, inplace=True)
-        attributes.set_index(keys='catchment_id', inplace=True)
+        frame: pd.DataFrame = self.__reference.loc[self.__reference['catchment_id'] == catchment_id, :]
+        attributes = frame.copy().drop_duplicates(ignore_index=True)
 
-        return attributes
+        return attributes.set_index(keys='ts_id')
 
     def exc(self, data: pd.DataFrame, catchment_id: int) -> str:
         """
