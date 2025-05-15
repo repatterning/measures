@@ -37,3 +37,5 @@ class Config:
         timespan.total_seconds()
 
         self.shift = int(1000 * timespan.total_seconds())
+
+        self.leap = '2024-01-01'
