@@ -16,11 +16,11 @@ class Data:
 
         self.__fields = {'timestamp': np.int64, 'measure': np.float64}
 
-    def __measures(self, paths: list[str], code: int):
+    def __measures(self, paths: list[str], code: int) -> pd.DataFrame:
         """
         
-        :param paths: 
-        :param code: 
+        :param paths: A list of uniform resource identifiers
+        :param code: A ts_id, i.e., a gauge's time series identification code.
         :return: 
         """
 
@@ -36,10 +36,11 @@ class Data:
 
         return data
 
-    def exc(self, listing: pd.DataFrame):
+    def exc(self, listing: pd.DataFrame) -> pd.DataFrame:
         """
         
-        :param listing: 
+        :param listing: Includes a field of uniform resource identifiers for data acquisition, additionally
+                        each instance includes a time series identification code
         :return: 
         """
 
