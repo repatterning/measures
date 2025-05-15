@@ -10,24 +10,42 @@ import src.contrasts.persist
 
 class Interface:
 
-    def __init__(self, listings: pd.DataFrame, reference: pd.DataFrame):
+    def __init__(self, listings: pd.DataFrame, reference: pd.DataFrame, arguments: dict):
+        """
+
+        :param listings:
+        :param reference:
+        :param arguments:
+        """
 
         self.__listings = listings
         self.__reference = reference
+        self.__arguments = arguments
 
     @dask.delayed
     def __get_codes(self, catchment_id) -> pd.DataFrame:
+        """
+
+        :param catchment_id:
+        :return:
+        """
 
         return self.__listings.loc[
             self.__listings['catchment_id'] == catchment_id, ['ts_id', 'uri']]
 
     def exc(self, partitions: list[pr.Partitions]):
+        """
+
+        :param partitions:
+        :return:
+        """
 
         catchment_id_ = np.array([partition.catchment_id for partition in partitions])
         catchment_id_ = np.unique(catchment_id_)
 
         __get_data = dask.delayed(src.contrasts.data.Data().exc)
-        __persist = dask.delayed(src.contrasts.persist.Persist(reference=self.__reference).exc)
+        __persist = dask.delayed(src.contrasts.persist.Persist(
+            reference=self.__reference, frequency=self.__arguments.get('frequency')).exc)
 
         computations = []
         for catchment_id in catchment_id_[:2]:
