@@ -13,6 +13,11 @@ import src.functions.objects
 class Persist:
 
     def __init__(self, reference: pd.DataFrame, frequency: float):
+        """
+
+        :param reference: Each instance encodes a few gauge attributes/characteristics
+        :param frequency: The granularity of the data, in hours.
+        """
 
         self.__reference = reference
         self.__interval = frequency * 60 * 60 * 1000
@@ -28,6 +33,12 @@ class Persist:
 
     @staticmethod
     def __get_nodes(data: pd.DataFrame) -> dict:
+        """
+
+        :param data: A frame wherein each field's data is the data of a distinct gauge, and the
+                     gauges belong to the same catchment.
+        :return:
+        """
 
         names = []
         blocks = []
@@ -42,6 +53,11 @@ class Persist:
         return nodes
 
     def __get_attributes(self, catchment_id: int) -> pd.DataFrame:
+        """
+
+        :param catchment_id:
+        :return:
+        """
 
         attributes: pd.DataFrame = self.__reference.loc[self.__reference['catchment_id'] == catchment_id, :]
         attributes.drop_duplicates(ignore_index=True, inplace=True)
@@ -50,6 +66,12 @@ class Persist:
         return attributes
 
     def exc(self, data: pd.DataFrame, catchment_id: int) -> str:
+        """
+
+        :param data:
+        :param catchment_id:
+        :return:
+        """
 
         # Point Start
         starting = data.index.min()
