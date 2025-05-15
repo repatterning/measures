@@ -34,9 +34,9 @@ class Data:
         data = self.__streams.read(text=text)
 
         data.rename(columns={'measure': name}, inplace=True)
+
         data.sort_values(by='timestamp', ascending=True, inplace=True)
         data.drop_duplicates(subset=['timestamp'], keep='first', inplace=True)
-        data.set_index(keys='timestamp', inplace=True)
 
         return data
 
@@ -48,10 +48,7 @@ class Data:
         :return:
         """
 
-        listing.info()
-
         dates = listing['date'].unique()
-        logging.info(type(dates[0]))
 
         instances = []
         for date in dates:
