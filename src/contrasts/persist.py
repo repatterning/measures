@@ -1,7 +1,6 @@
+"""Module persist.py"""
 import json
 import os
-import logging
-import time
 
 import pandas as pd
 
@@ -11,6 +10,9 @@ import src.functions.objects
 
 
 class Persist:
+    """
+    Persist
+    """
 
     def __init__(self, reference: pd.DataFrame, frequency: float):
         """
@@ -29,6 +31,7 @@ class Persist:
         # Ensure the storage area exists
         src.functions.directories.Directories().create(self.__endpoint)
 
+        # For creating JSON files
         self.__objects = src.functions.objects.Objects()
 
     @staticmethod
@@ -73,10 +76,6 @@ class Persist:
         :return:
         """
 
-        # Point Start
-        starting = data.index.min()
-        logging.info('%s: %s', starting, type(starting))
-
         # Nodes
         nodes = self.__get_nodes(data=data.copy())
 
@@ -84,7 +83,7 @@ class Persist:
         attributes = self.__get_attributes(catchment_id=catchment_id)
 
         # Hence
-        nodes['starting'] = int(starting)
+        nodes['starting'] = int(data.index.min())
         nodes['interval'] = self.__interval
         nodes['attributes'] = attributes.to_dict(orient='split')
 
