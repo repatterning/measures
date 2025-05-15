@@ -1,9 +1,7 @@
-
-import logging
+"""Module data.py"""
+import dask.dataframe as ddf
 import numpy as np
 import pandas as pd
-import dask.dataframe as ddf
-import json
 
 
 class Data:
