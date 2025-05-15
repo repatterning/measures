@@ -62,7 +62,7 @@ class Partitions:
 
         # Hence, the data sets in focus vis-à-vis the years in focus
         listings = limits.merge(data, how='left', on='date')
-        listings = listings[:32]
+        listings = listings[:16]
 
         # ...
         partitions = listings[['catchment_id', 'ts_id']].drop_duplicates()
