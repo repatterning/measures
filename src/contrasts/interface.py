@@ -1,4 +1,4 @@
-
+"""Module interface.py"""
 import logging
 
 import dask
@@ -18,9 +18,10 @@ class Interface:
     def __init__(self, listings: pd.DataFrame, reference: pd.DataFrame, arguments: dict):
         """
 
-        :param listings:
-        :param reference:
-        :param arguments:
+        :param listings: Includes a field of uniform resource identifiers for data acquisition, additionally
+                         each instance includes a time series identification code
+        :param reference: Each instance encodes a few gauge attributes/characteristics
+        :param arguments: A set of arguments vis-à-vis calculation objectives.
         """
 
         self.__listings = listings
