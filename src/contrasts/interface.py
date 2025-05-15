@@ -56,7 +56,7 @@ class Interface:
 
         # Compute
         computations = []
-        for catchment_id in catchment_id_[:8]:
+        for catchment_id in catchment_id_:
             listing = self.__get_codes(catchment_id=catchment_id)
             data = __get_data(listing=listing)
             message = __persist(data=data, catchment_id=catchment_id)
