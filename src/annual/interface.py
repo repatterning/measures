@@ -5,7 +5,6 @@ import dask
 import numpy as np
 import pandas as pd
 
-import src.annual.data
 import src.elements.partitions as pr
 
 
@@ -46,16 +45,11 @@ class Interface:
             np.array([partition.ts_id for partition in partitions])
         )
 
-        # Delayed Tasks
-        __get_data = dask.delayed(src.annual.data.Data().exc)
-
-
-        # Compute
+        # Compute: Each gauge has a data set/file per year
         computations = []
         for ts_id in ts_id_:
             listing = self.__get_codes(ts_id)
-            message = __get_data(listing=listing)
-            computations.append(message)
+            computations.append(listing.shape[0])
 
         messages = dask.compute(computations, scheduler='threads')[0]
         logging.info(messages)
