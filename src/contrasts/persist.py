@@ -43,8 +43,10 @@ class Persist:
     def __get_attributes(self, catchment_id: int) -> pd.DataFrame:
 
         attributes: pd.DataFrame = self.__reference.loc[self.__reference['catchment_id'] == catchment_id, :]
+        attributes.drop_duplicates(ignore_index=True, inplace=True)
+        attributes.set_index(keys='catchment_id', inplace=True)
 
-        return attributes.drop_duplicates(ignore_index=True)
+        return attributes
 
     def exc(self, data: pd.DataFrame, catchment_id: int) -> str:
 
