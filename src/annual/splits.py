@@ -1,4 +1,4 @@
-
+import logging
 import pandas as pd
 import src.annual.data
 
@@ -32,7 +32,5 @@ class Splits:
 
             parts = parts.merge(data, on='milliseconds', how='outer')
 
-
-
-
+        logging.info(parts.head())
 
