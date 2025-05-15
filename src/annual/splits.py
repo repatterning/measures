@@ -10,7 +10,7 @@ class Splits:
         self.__data = src.annual.data.Data()
 
 
-    def exc(self, listing: pd.DataFrame):
+    def exc(self, listing: pd.DataFrame) -> pd.DataFrame:
         """
         The fields of listing are date: pandas.Timestamp, uri: str, catchment_id: int, ts_id: int
 
@@ -19,11 +19,11 @@ class Splits:
         :return:
         """
 
-
+        logging.info(listing)
 
         parts = pd.DataFrame()
         for i in range(listing.shape[0]):
-            attributes: pd.Series = listing.loc[i, :]
+            attributes: pd.Series = listing.loc[listing.index[i], :]
             data = self.__data.exc(uri=attributes['uri'], date=attributes['date'])
 
             if i == 0:
@@ -32,5 +32,4 @@ class Splits:
 
             parts = parts.merge(data, on='milliseconds', how='outer')
 
-        logging.info(parts.head())
-
+        return parts
