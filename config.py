@@ -2,6 +2,7 @@
 Module config
 """
 import os
+import datetime
 
 
 class Config:
@@ -29,5 +30,10 @@ class Config:
         # The prefix of the Amazon repository where the quantiles will be stored
         self.prefix = 'warehouse/measurements'
 
-        # Data granularity
-        self.granularity = {'h': 'hour', 'd': 'day', 'w': 'week', 'y': 'year'}
+        # Times
+        starting = datetime.datetime.strptime('2024-02-29 00:00:00', '%Y-%m-%d %H:%M:%S')
+        ending = datetime.datetime.strptime('2024-03-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+        timespan = ending - starting
+        timespan.total_seconds()
+
+        self.shift = int(1000 * timespan.total_seconds())
