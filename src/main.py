@@ -20,6 +20,7 @@ def main():
     partitions, listings, reference = src.assets.interface.Interface(
         service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
     logger.info(listings)
+    listings.info()
     logger.info(partitions)
 
     # src.contrasts.interface.Interface(
