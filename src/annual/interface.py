@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 
 import src.elements.partitions as pr
+import src.annual.splits
+import src.annual.persist
 
 
 class Interface:
@@ -45,11 +47,18 @@ class Interface:
             np.array([partition.ts_id for partition in partitions])
         )
 
+        # Delayed Tasks
+        __get_splits = dask.delayed(src.annual.splits.Splits().exc)
+        __persist = dask.delayed(src.annual.persist.Persist(
+            reference=self.__reference, frequency=self.__arguments.get('frequency')).exc)
+
         # Compute: Each gauge has a data set/file per year
         computations = []
         for ts_id in ts_id_:
             listing = self.__get_codes(ts_id)
-            computations.append(listing.shape[0])
+            splits = __get_splits(listing=listing)
+            message = __persist(splits=splits, ts_id=ts_id)
+            computations.append(message)
 
         messages = dask.compute(computations, scheduler='threads')[0]
         logging.info(messages)
