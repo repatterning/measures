@@ -12,9 +12,10 @@ import src.functions.objects
 
 class Persist:
 
-    def __init__(self, reference: pd.DataFrame):
+    def __init__(self, reference: pd.DataFrame, frequency: float):
 
         self.__reference = reference
+        self.__interval = frequency * 60 * 60 * 1000
 
         # The storage area
         self.__configurations = config.Config()
@@ -61,11 +62,8 @@ class Persist:
         attributes = self.__get_attributes(catchment_id=catchment_id)
 
         # Hence
-        # pattern = '%Y-%m-%d %H:%M:%S'
-        # structure = time.strptime(starting.strftime(pattern), pattern)
-        # ... = time.mktime(structure)
         nodes['starting'] = int(starting)
-        # nodes['interval'] = arguments.get('frequency') * 60 * 60 * 1000
+        nodes['interval'] = self.__interval
         nodes['attributes'] = attributes.to_dict(orient='split')
 
         message = self.__objects.write(
