@@ -1,7 +1,7 @@
 """Module partitions.py"""
-import typing
-import logging
 import datetime
+import typing
+
 import numpy as np
 import pandas as pd
 
@@ -38,6 +38,7 @@ class Partitions:
         # Create series
         limits = pd.date_range(start=starting, end=ending, freq='YS'
                               ).to_frame(index=False, name='date')
+        limits['date'] = pd.to_datetime(limits['date'], format='%Y-%m-%d')
 
         return limits
 
@@ -49,7 +50,6 @@ class Partitions:
 
         # The years in focus, via the year start date, e.g., 2023-01-01
         limits = self.__limits()
-        logging.info(limits)
 
         # If the focus is just one or a few catchments ...
         codes = np.array(self.__arguments.get('excerpt'))
