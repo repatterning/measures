@@ -7,12 +7,24 @@ import json
 
 
 class Data:
+    """
+    Data
+    """
 
     def __init__(self):
+        """
+        Constructor
+        """
 
         self.__fields = {'timestamp': np.int64, 'measure': np.float64}
 
     def __measures(self, paths: list[str], code: int):
+        """
+        
+        :param paths: 
+        :param code: 
+        :return: 
+        """
 
         try:
             data: pd.DataFrame = ddf.read_csv(paths, usecols=self.__fields.keys(), dtype=self.__fields).compute()
@@ -22,22 +34,24 @@ class Data:
         data.rename(columns={'measure': str(code)}, inplace=True)
         data.sort_values(by='timestamp', ascending=True, inplace=True)
         data.drop_duplicates(subset=['timestamp'], keep='first', inplace=True)
-        # data.index = pd.to_datetime(data['timestamp'], unit='ms')
-        # data.index.rename('index', inplace=True)
-        # data.drop(columns='timestamp', inplace=True)
         data.set_index(keys='timestamp', inplace=True)
 
         return data
 
     def exc(self, listing: pd.DataFrame):
+        """
+        
+        :param listing: 
+        :return: 
+        """
 
         codes = listing['ts_id'].unique()
 
-        readings = []
+        instances = []
         for code in codes:
             paths = listing.loc[listing['ts_id'] == code, 'uri'].to_list()
             frame = self.__measures(paths=paths, code=code)
-            readings.append(frame)
-        data = pd.concat(readings, axis=1, ignore_index=False)
+            instances.append(frame)
+        data = pd.concat(instances, axis=1, ignore_index=False)
 
         return data
