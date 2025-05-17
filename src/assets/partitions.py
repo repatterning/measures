@@ -42,22 +42,39 @@ class Partitions:
 
         return limits
 
-    def exc(self) -> typing.Tuple[pd.DataFrame, pd.DataFrame]:
+    def __filter(self, codes: np.ndarray=None) -> pd.DataFrame:
         """
 
+        :param codes:
+        :return:
+        """
+
+        if codes is None:
+            codes = np.unique(np.array(self.__arguments.get('excerpt')))
+
+        if codes.size == 0:
+            return  self.__data
+
+        catchments = self.__data.loc[self.__data['ts_id'].isin(codes), 'catchment_id'].unique()
+        data = self.__data.copy().loc[self.__data['catchment_id'].isin(catchments), :]
+
+        return data if data.shape[0] > 0 else self.__data
+
+    def exc(self, codes: list[int]|None) -> typing.Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+
+        :param codes: Inputted time series codes
         :return:
         """
 
         # The years in focus, via the year start date, e.g., 2023-01-01
         limits = self.__limits()
 
-        # If the focus is just one or a few catchments ...
-        codes = np.unique(np.array(self.__arguments.get('excerpt')))
-        if codes.size == 0:
-            data =  self.__data
+        # Focusing
+        if codes is None:
+            data = self.__filter()
         else:
-            data = self.__data.copy().loc[self.__data['catchment_id'].isin(codes), :]
-            data = data if data.shape[0] > 0 else self.__data
+            data = self.__filter(codes=np.array(codes))
 
         # Hence, the data sets in focus vis-à-vis the years in focus
         listings = limits.merge(data, how='left', on='date')
