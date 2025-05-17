@@ -25,7 +25,7 @@ class Config:
         # Template
         self.s3_parameters_key = 's3_parameters.yaml'
         self.arguments_key = 'measurements/arguments.json'
-        self.metadata_ = 'external/metadata/measurements'
+        self.metadata_ = 'measurements/external'
 
         # The prefix of the Amazon repository where the quantiles will be stored
         self.prefix = 'warehouse/measurements'
