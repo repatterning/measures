@@ -25,6 +25,11 @@ class Menu:
         self.__objects = src.functions.objects.Objects()
 
     def __annual(self, reference: pd.DataFrame):
+        """
+        
+        :param reference:
+        :return:
+        """
 
         path = os.path.join(self.__configurations.menu_, 'annual')
         self.__directories.create(path=path)
@@ -37,6 +42,11 @@ class Menu:
             nodes=nodes, path=os.path.join(path, 'menu.json'))
 
     def __contrasts(self, reference: pd.DataFrame):
+        """
+
+        :param reference:
+        :return:
+        """
 
         # Storage
         path = os.path.join(self.__configurations.menu_, 'contrasts')
@@ -55,10 +65,5 @@ class Menu:
         :return:
         """
 
-
-        logging.info('Graphing Menu ->\n%s', message)
-
-
-
-
-
+        for message in (self.__annual(reference=reference), self.__contrasts(reference=reference)):
+            logging.info('Graphing Menu ->\n%s', message)
