@@ -1,11 +1,18 @@
+"""Module splits.py"""
 import logging
 import pandas as pd
 import src.annual.data
 
 
 class Splits:
+    """
+    Splits
+    """
 
     def __init__(self):
+        """
+        Constructor
+        """
 
         self.__data = src.annual.data.Data()
 
@@ -18,8 +25,6 @@ class Splits:
                         each instance includes a time series identification code
         :return:
         """
-
-        logging.info(listing)
 
         parts = pd.DataFrame()
         for i in range(listing.shape[0]):
