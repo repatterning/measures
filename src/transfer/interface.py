@@ -38,7 +38,14 @@ class Interface:
         self.__configurations = config.Config()
         self.__dictionary = src.transfer.dictionary.Dictionary()
 
-    def __temporary(self, string: str):
+    def __get_metadata(self, string: str):
+        """
+
+        :param string:
+        :return:
+        """
+
+        logging.info('METADATA: %s', type(self.__menu.get('annual')))
 
         match string:
             case 'menu/annual':
@@ -59,20 +66,14 @@ class Interface:
         """
 
         # The strings for transferring data to Amazon S3 (Simple Storage Service)
-        strings = self.__dictionary.exc(
+        strings: pd.DataFrame = self.__dictionary.exc(
             path=self.__configurations.measurements_,
             extension='json', prefix=self.__configurations.prefix + '/')
-        logging.info(strings[:1])
 
-        strings = strings.assign(
-            metadata = strings['section'].apply(lambda x: self.__temporary(x)))
+        # Metadata
+        strings: pd.DataFrame = strings.assign(
+            metadata = strings['section'].apply(lambda x: self.__get_metadata(x)))
         logging.info(strings)
-
-        '''
-        # Adding metadata details per instance
-        strings = self.__get_metadata(frame=strings.copy())
-        logging.info(strings)
-
 
         # Prepare the S3 (Simple Storage Service) section
         src.transfer.cloud.Cloud(
@@ -83,4 +84,3 @@ class Interface:
             service=self.__service, bucket_name=self.__s3_parameters.external).exc(
             strings=strings, tagging='project=hydrography')
         logging.info(messages)
-        '''
