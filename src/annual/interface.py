@@ -11,6 +11,9 @@ import src.annual.persist
 
 
 class Interface:
+    """
+    Interface
+    """
 
     def __init__(self, listings: pd.DataFrame, reference: pd.DataFrame, arguments: dict):
         """
