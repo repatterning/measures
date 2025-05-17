@@ -1,5 +1,4 @@
 """Module splits.py"""
-import logging
 import pandas as pd
 import src.annual.data
 
