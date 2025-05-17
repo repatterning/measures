@@ -23,8 +23,8 @@ def main():
     listings.info()
     logger.info(partitions)
 
-    # src.contrasts.interface.Interface(
-    #     listings=listings, reference=reference, arguments=arguments).exc(partitions=partitions)
+    src.contrasts.interface.Interface(
+        listings=listings, reference=reference, arguments=arguments).exc(partitions=partitions)
 
     src.annual.interface.Interface(
         listings=listings, reference=reference, arguments=arguments).exc(partitions=partitions)
