@@ -70,9 +70,9 @@ class Interface:
             path=self.__configurations.measurements_,
             extension='json', prefix=self.__configurations.prefix + '/')
 
-        # Metadata
+        # Metadata ->
         strings: pd.DataFrame = strings.assign(
-            metadata = strings['section'].apply(lambda x: self.__get_metadata(x)))
+            metadata = strings['section'].apply(self.__get_metadata))
         logging.info(strings)
 
         # Prepare the S3 (Simple Storage Service) section
