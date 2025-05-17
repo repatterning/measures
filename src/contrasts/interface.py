@@ -28,7 +28,6 @@ class Interface:
         self.__reference = reference
         self.__arguments = arguments
 
-    @dask.delayed
     def __get_codes(self, catchment_id) -> pd.DataFrame:
         """
 
@@ -49,18 +48,18 @@ class Interface:
         catchment_id_ = np.array([partition.catchment_id for partition in partitions])
         catchment_id_ = np.unique(catchment_id_)
 
-        # Delayed Tasks
-        __get_data = dask.delayed(src.contrasts.data.Data().exc)
-        __persist = dask.delayed(src.contrasts.persist.Persist(
-            reference=self.__reference, frequency=self.__arguments.get('frequency')).exc)
+        # Tasks
+        __get_data = src.contrasts.data.Data()
+        __persist = src.contrasts.persist.Persist(
+            reference=self.__reference, frequency=self.__arguments.get('frequency'))
 
-        # Compute
+        # Compute: There are fewer than fifty catchments, but there are between 1 ≤ gauges per catchment ≤ 50.  Therefore,
+        # use dask.compute within the data class
         computations = []
         for catchment_id in catchment_id_:
             listing = self.__get_codes(catchment_id=catchment_id)
-            data = __get_data(listing=listing)
-            message = __persist(data=data, catchment_id=catchment_id)
+            data = __get_data.exc(listing=listing)
+            message = __persist.exc(data=data, catchment_id=catchment_id)
             computations.append(message)
 
-        messages = dask.compute(computations, scheduler='threads')[0]
-        logging.info(messages)
+        logging.info(computations)
