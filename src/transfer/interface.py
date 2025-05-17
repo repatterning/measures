@@ -84,5 +84,3 @@ class Interface:
             strings=strings, tagging='project=hydrography')
         logging.info(messages)
         '''
-
-
