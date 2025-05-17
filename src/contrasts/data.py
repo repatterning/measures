@@ -1,4 +1,6 @@
 """Module data.py"""
+import logging
+import dask
 import dask.dataframe as ddf
 import numpy as np
 import pandas as pd
@@ -16,6 +18,7 @@ class Data:
 
         self.__fields = {'timestamp': np.int64, 'measure': np.float64}
 
+    @dask.delayed
     def __measures(self, paths: list[str], code: int) -> pd.DataFrame:
         """
         
@@ -46,11 +49,14 @@ class Data:
 
         codes = listing['ts_id'].unique()
 
-        instances = []
+        computations = []
         for code in codes:
             paths = listing.loc[listing['ts_id'] == code, 'uri'].to_list()
             frame = self.__measures(paths=paths, code=code)
-            instances.append(frame)
+            computations.append(frame)
+        instances = dask.compute(computations, scheduler='threads')[0]
         data = pd.concat(instances, axis=1, ignore_index=False)
+
+        logging.info(data.head())
 
         return data
