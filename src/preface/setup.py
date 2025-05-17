@@ -1,7 +1,6 @@
 """
 Module setup.py
 """
-import logging
 import sys
 
 import config
@@ -34,9 +33,6 @@ class Setup:
 
         # Configurations
         self.__configurations = config.Config()
-
-        # An instance for interacting with objects within an Amazon S3 prefix
-        self.__pre = src.s3.prefix.Prefix(service=self.__service, bucket_name=self.__s3_parameters.external)
 
     def __s3(self) -> bool:
         """
