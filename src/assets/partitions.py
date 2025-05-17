@@ -52,8 +52,7 @@ class Partitions:
         limits = self.__limits()
 
         # If the focus is just one or a few catchments ...
-        codes = np.array(self.__arguments.get('excerpt'))
-        codes = np.unique(codes)
+        codes = np.unique(np.array(self.__arguments.get('excerpt')))
         if codes.size == 0:
             data =  self.__data
         else:
@@ -62,10 +61,6 @@ class Partitions:
 
         # Hence, the data sets in focus vis-à-vis the years in focus
         listings = limits.merge(data, how='left', on='date')
-        listings.sort_values(by='catchment_id', ascending=False, inplace=True)
-        listings = listings[:29]
-
-        # ...
         partitions = listings[['catchment_id', 'ts_id']].drop_duplicates()
 
         return partitions, listings
