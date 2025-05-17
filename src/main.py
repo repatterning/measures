@@ -1,5 +1,6 @@
 """Module main.py"""
 import datetime
+import argparse
 import logging
 import os
 import sys
@@ -18,7 +19,7 @@ def main():
 
     # The time series partitions, the reference sheet of gauges
     partitions, listings, reference = src.assets.interface.Interface(
-        service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
+        service=service, s3_parameters=s3_parameters, arguments=arguments).exc(codes=args.codes)
     logger.info(listings)
     listings.info()
     logger.info(partitions)
@@ -57,6 +58,13 @@ if __name__ == '__main__':
     import src.functions.cache
     import src.preface.interface
     import src.transfer.interface
+    import src.specific
+
+    specific = src.specific.Specific()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--codes', type=specific.codes,
+                        help='Expects a string of one or more comma separated gauge time series codes.')
+    args = parser.parse_args()
 
     connector: boto3.session.Session
     s3_parameters: s3p.S3Parameters
