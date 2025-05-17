@@ -20,9 +20,7 @@ def main():
     # The time series partitions, the reference sheet of gauges
     partitions, listings, reference = src.assets.interface.Interface(
         service=service, s3_parameters=s3_parameters, arguments=arguments).exc(codes=args.codes)
-    logger.info(listings)
     listings.info()
-    logger.info(partitions)
 
     src.contrasts.interface.Interface(
         listings=listings, reference=reference, arguments=arguments).exc(partitions=partitions)
@@ -31,8 +29,8 @@ def main():
         listings=listings, reference=reference, arguments=arguments).exc(partitions=partitions)
 
     # Transferring calculations to an Amazon S3 (Simple Storage Service) bucket
-    # src.transfer.interface.Interface(
-    #     connector=connector, service=service, s3_parameters=s3_parameters).exc()
+    src.transfer.interface.Interface(
+        connector=connector, service=service, s3_parameters=s3_parameters).exc()
 
     # Cache
     src.functions.cache.Cache().exc()
