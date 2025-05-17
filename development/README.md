@@ -92,9 +92,7 @@ IDEA** set up involves connecting to a machine's Docker [daemon](https://www.jet
 
 ## Code Analysis
 
-The GitHub Actions script [main.yml](../.github/workflows/main.yml) conducts code analysis within a Cloud GitHub Workspace.  Depending on the script, code analysis may occur `on push` to any repository branch, or `on push` to a specific branch.
-
-The sections herein outline remote code analysis.
+The GitHub Actions script [main.yml](../.github/workflows/main.yml) conducts code analysis within a Cloud GitHub Workspace.  Depending on the script, code analysis may occur `on push` to any repository branch, or `on push` to a specific branch.  The sections herein outline remote code analysis.
 
 <br>
 
