@@ -45,9 +45,10 @@ class Interface:
 
         return [pr.Partitions(**value) for value in values]
 
-    def exc(self) -> typing.Tuple[list[pr.Partitions], pd.DataFrame, pd.DataFrame]:
+    def exc(self, codes: list[int]) -> typing.Tuple[list[pr.Partitions], pd.DataFrame, pd.DataFrame]:
         """
 
+        :param codes:
         :return:
         """
 
@@ -57,7 +58,8 @@ class Interface:
 
         # Strings for data reading.  If self.__arguments.get('reacquire') is False, the partitions will be those
         # of excerpt ...
-        partitions, listings = src.assets.partitions.Partitions(data=gauges, arguments=self.__arguments).exc()
+        partitions, listings = src.assets.partitions.Partitions(
+            data=gauges, arguments=self.__arguments).exc(codes=codes)
 
         # The reference sheet of gauges.  Each instance encodes the attributes of a gauge.
         reference = src.assets.reference.Reference(
