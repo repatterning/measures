@@ -5,8 +5,8 @@ import os
 import pandas as pd
 
 import config
-import src.functions.objects
 import src.functions.directories
+import src.functions.objects
 
 
 class Menu:
@@ -26,14 +26,16 @@ class Menu:
 
     def __annual(self, reference: pd.DataFrame):
         """
-        
+
         :param reference:
         :return:
         """
 
+        # Storage
         path = os.path.join(self.__configurations.menu_, 'annual')
         self.__directories.create(path=path)
 
+        # Menu
         names = (reference['station_name'] + '/' + reference['catchment_name']).to_numpy()
         frame = pd.DataFrame(data={'desc': reference['ts_id'].to_numpy(), 'name': names})
         nodes = frame.to_dict(orient='records')
@@ -52,6 +54,7 @@ class Menu:
         path = os.path.join(self.__configurations.menu_, 'contrasts')
         self.__directories.create(path=path)
 
+        # Menu
         excerpt = reference.copy()[['catchment_id', 'catchment_name']]
         nodes = excerpt.to_dict(orient='records')
 
