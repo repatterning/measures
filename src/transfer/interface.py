@@ -30,26 +30,27 @@ class Interface:
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
 
         # Metadata
-        self.__metadata = src.transfer.metadata.Metadata(connector=connector)
+        metadata = src.transfer.metadata.Metadata(connector=connector)
+        self.__points = metadata.exc(name='points.json')
+        self.__menu = metadata.exc(name='menu.json')
 
         # Instances
         self.__configurations = config.Config()
         self.__dictionary = src.transfer.dictionary.Dictionary()
 
-    def __get_metadata(self, frame: pd.DataFrame) -> pd.DataFrame:
-        """
+    def __temporary(self, string: str):
 
-        :param frame:
-        :return:
-        """
-        __points = self.__metadata.exc(name='points.json')
-        __menu = self.__metadata.exc(name='menu.json')
-
-        frame = frame.assign(
-            metadata = frame['section'].apply(
-                lambda x: __points if x == 'points' else __menu))
-
-        return frame
+        match string:
+            case 'menu/annual':
+                return self.__menu.get('annual')
+            case 'menu/contrasts':
+                return self.__menu.get('contrasts')
+            case 'points/annual':
+                return self.__points.get('annual')
+            case 'points/contrasts':
+                return self.__points.get('contrasts')
+            case _:
+                raise ValueError(f'{string} is invalid')
 
     def exc(self):
         """
@@ -61,12 +62,18 @@ class Interface:
         strings = self.__dictionary.exc(
             path=self.__configurations.measurements_,
             extension='json', prefix=self.__configurations.prefix + '/')
+        logging.info(strings[:1])
 
+        strings = strings.assign(
+            metadata = strings['section'].apply(lambda x: self.__temporary(x)))
+        logging.info(strings)
+
+        '''
         # Adding metadata details per instance
         strings = self.__get_metadata(frame=strings.copy())
         logging.info(strings)
 
-        '''
+
         # Prepare the S3 (Simple Storage Service) section
         src.transfer.cloud.Cloud(
             service=self.__service, s3_parameters=self.__s3_parameters).exc()
@@ -77,3 +84,5 @@ class Interface:
             strings=strings, tagging='project=hydrography')
         logging.info(messages)
         '''
+
+
