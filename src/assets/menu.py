@@ -6,6 +6,7 @@ import pandas as pd
 
 import config
 import src.functions.objects
+import src.functions.directories
 
 
 class Menu:
@@ -20,6 +21,33 @@ class Menu:
 
         self.__configurations = config.Config()
 
+        self.__directories = src.functions.directories.Directories()
+        self.__objects = src.functions.objects.Objects()
+
+    def __annual(self, reference: pd.DataFrame):
+
+        path = os.path.join(self.__configurations.menu_, 'annual')
+        self.__directories.create(path=path)
+
+        names = (reference['station_name'] + '/' + reference['catchment_name']).to_numpy()
+        frame = pd.DataFrame(data={'desc': reference['ts_id'].to_numpy(), 'name': names})
+        nodes = frame.to_dict(orient='records')
+
+        return self.__objects.write(
+            nodes=nodes, path=os.path.join(path, 'menu.json'))
+
+    def __contrasts(self, reference: pd.DataFrame):
+
+        # Storage
+        path = os.path.join(self.__configurations.menu_, 'contrasts')
+        self.__directories.create(path=path)
+
+        excerpt = reference.copy()[['catchment_id', 'catchment_name']]
+        nodes = excerpt.to_dict(orient='records')
+
+        return self.__objects.write(
+            nodes=nodes, path=os.path.join(path, 'menu.json'))
+
     def exc(self, reference: pd.DataFrame):
         """
 
@@ -27,12 +55,10 @@ class Menu:
         :return:
         """
 
-        names = (reference['station_name'] + '/' + reference['catchment_name']).to_numpy()
-        frame = pd.DataFrame(data={'desc': reference['ts_id'].to_numpy(),
-                                   'name': names})
 
-        nodes = frame.to_dict(orient='records')
-
-        message = src.functions.objects.Objects().write(
-            nodes=nodes, path=os.path.join(self.__configurations.menu_, 'menu.json'))
         logging.info('Graphing Menu ->\n%s', message)
+
+
+
+
+
