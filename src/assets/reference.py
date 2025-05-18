@@ -1,6 +1,5 @@
 """Module reference.py"""
 import pandas as pd
-import numpy as np
 
 import src.elements.s3_parameters as s3p
 import src.elements.text_attributes as txa
@@ -42,14 +41,13 @@ class Reference:
 
         return self.__stream.read(text=text)
 
-    def exc(self, ts_id: np.ndarray) -> pd.DataFrame:
+    def exc(self) -> pd.DataFrame:
         """
 
-        :param ts_id:
         :return:
         """
 
         reference = self.__get_reference()
         reference.rename(columns=self.__rename, inplace=True)
 
-        return reference.loc[reference['ts_id'].isin(ts_id), :]
+        return reference
