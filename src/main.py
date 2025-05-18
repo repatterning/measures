@@ -1,6 +1,6 @@
 """Module main.py"""
-import datetime
 import argparse
+import datetime
 import logging
 import os
 import sys
@@ -20,9 +20,6 @@ def main():
     # The time series partitions, the reference sheet of gauges
     partitions, listings, reference = src.assets.interface.Interface(
         service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
-    logger.info(partitions)
-    logger.info(listings)
-    logger.info(reference)
 
     src.contrasts.interface.Interface(
         listings=listings, reference=reference, arguments=arguments).exc(partitions=partitions)
