@@ -1,6 +1,6 @@
 """Module main.py"""
-import datetime
 import argparse
+import datetime
 import logging
 import os
 import sys
@@ -19,8 +19,7 @@ def main():
 
     # The time series partitions, the reference sheet of gauges
     partitions, listings, reference = src.assets.interface.Interface(
-        service=service, s3_parameters=s3_parameters, arguments=arguments).exc(codes=args.codes)
-    listings.info()
+        service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
 
     src.contrasts.interface.Interface(
         listings=listings, reference=reference, arguments=arguments).exc(partitions=partitions)
@@ -68,6 +67,6 @@ if __name__ == '__main__':
     s3_parameters: s3p.S3Parameters
     service: sr.Service
     arguments: dict
-    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
+    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc(codes=args.codes)
 
     main()

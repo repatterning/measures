@@ -45,10 +45,9 @@ class Interface:
 
         return [pr.Partitions(**value) for value in values]
 
-    def exc(self, codes: list[int]) -> typing.Tuple[list[pr.Partitions], pd.DataFrame, pd.DataFrame]:
+    def exc(self) -> typing.Tuple[list[pr.Partitions], pd.DataFrame, pd.DataFrame]:
         """
 
-        :param codes:
         :return:
         """
 
@@ -59,13 +58,16 @@ class Interface:
         # Strings for data reading.  If self.__arguments.get('reacquire') is False, the partitions will be those
         # of excerpt ...
         partitions, listings = src.assets.partitions.Partitions(
-            data=gauges, arguments=self.__arguments).exc(codes=codes)
+            data=gauges, arguments=self.__arguments).exc()
 
         # The reference sheet of gauges.  Each instance encodes the attributes of a gauge.
-        reference = src.assets.reference.Reference(
-            s3_parameters=self.__s3_parameters).exc(ts_id=partitions['ts_id'].unique())
+        reference = src.assets.reference.Reference(s3_parameters=self.__s3_parameters).exc()
 
         # Menu: For selecting a gauge's graph of quantiles via the gauge's time series identifier.
         src.assets.menu.Menu().exc(reference=reference)
 
-        return self.__structure(partitions=partitions), listings, reference
+        # Finally
+        ts_id = partitions['ts_id'].unique()
+        _reference = reference.copy().loc[reference['ts_id'].isin(ts_id), :]
+
+        return self.__structure(partitions=partitions), listings, _reference
