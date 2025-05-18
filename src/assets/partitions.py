@@ -42,15 +42,13 @@ class Partitions:
 
         return limits
 
-    def __filter(self, codes: np.ndarray=None) -> pd.DataFrame:
+    def __details(self) -> pd.DataFrame:
         """
 
-        :param codes:
         :return:
         """
 
-        if codes is None:
-            codes = np.unique(np.array(self.__arguments.get('excerpt')))
+        codes = np.unique(np.array(self.__arguments.get('excerpt')))
 
         if codes.size == 0:
             return  self.__data
@@ -60,24 +58,20 @@ class Partitions:
 
         return data if data.shape[0] > 0 else self.__data
 
-    def exc(self, codes: list[int]|None) -> typing.Tuple[pd.DataFrame, pd.DataFrame]:
+    def exc(self) -> typing.Tuple[pd.DataFrame, pd.DataFrame]:
         """
 
-        :param codes: Inputted time series codes
         :return:
         """
 
         # The years in focus, via the year start date, e.g., 2023-01-01
         limits = self.__limits()
 
-        # Focusing
-        if codes is None:
-            data = self.__filter()
-        else:
-            data = self.__filter(codes=np.array(codes))
+        # The data sets details
+        details = self.__details()
 
         # Hence, the data sets in focus vis-à-vis the years in focus
-        listings = limits.merge(data, how='left', on='date')
+        listings = limits.merge(details, how='left', on='date')
         partitions = listings[['catchment_id', 'ts_id']].drop_duplicates()
 
         return partitions, listings
