@@ -55,7 +55,7 @@ class Menu:
         self.__directories.create(path=path)
 
         # Menu
-        excerpt = reference.copy()[['catchment_id', 'catchment_name']]
+        excerpt = reference.copy()[['catchment_id', 'catchment_name']].drop_duplicates()
         nodes = excerpt.to_dict(orient='records')
 
         return self.__objects.write(
