@@ -90,8 +90,7 @@ class Data:
         data = self.__get_milliseconds(blob=data.copy(), date=date)
         data = self.__limits(blob=data.copy(), date=date)
 
-
         instances = data.copy()[['milliseconds', 'measure']]
-        instances.rename(columns={'measure': str(date)}, inplace=True)
+        instances.rename(columns={'measure': str(date.date())}, inplace=True)
 
         return instances
