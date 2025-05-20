@@ -55,16 +55,16 @@ class Interface:
         gauges = src.assets.gauges.Gauges(
             service=self.__service, s3_parameters=self.__s3_parameters, arguments=self.__arguments).exc()
 
-        # Strings for data reading.  If self.__arguments.get('reacquire') is False, the partitions will be those
-        # of excerpt ...
-        partitions, listings = src.assets.partitions.Partitions(
-            data=gauges, arguments=self.__arguments).exc()
-
         # The reference sheet of gauges.  Each instance encodes the attributes of a gauge.
         reference = src.assets.reference.Reference(s3_parameters=self.__s3_parameters).exc()
 
-        # Menu: For selecting a gauge's graph of quantiles via the gauge's time series identifier.
-        src.assets.menu.Menu().exc(reference=reference)
+        # Menu: For selecting graphs.
+        booleans = reference['ts_id'].isin(gauges['ts_id'].unique())
+        src.assets.menu.Menu().exc(reference=reference.copy().loc[booleans, :])
+
+        # Strings for data reading.
+        partitions, listings = src.assets.partitions.Partitions(
+            data=gauges, arguments=self.__arguments).exc()
 
         # Finally
         ts_id = partitions['ts_id'].unique()
