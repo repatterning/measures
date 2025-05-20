@@ -31,13 +31,15 @@ class Menu:
         :return:
         """
 
+        excerpt = reference.copy().sort_values(by=['catchment_name', 'station_name'], ascending=True)
+
         # Storage
         path = os.path.join(self.__configurations.menu_, 'annual')
         self.__directories.create(path=path)
 
         # Menu
-        names = (reference['station_name'] + '/' + reference['catchment_name']).to_numpy()
-        frame = pd.DataFrame(data={'desc': reference['ts_id'].to_numpy(), 'name': names})
+        names = (excerpt['station_name'] + '/' + excerpt['catchment_name']).to_numpy()
+        frame = pd.DataFrame(data={'desc': excerpt['ts_id'].to_numpy(), 'name': names})
         nodes = frame.to_dict(orient='records')
 
         return self.__objects.write(
@@ -56,6 +58,7 @@ class Menu:
 
         # Menu
         excerpt = reference.copy()[['catchment_id', 'catchment_name']].drop_duplicates()
+        excerpt.sort_values(by='catchment_name', ascending=True, inplace=True)
         nodes = excerpt.to_dict(orient='records')
 
         return self.__objects.write(

@@ -38,8 +38,7 @@ class Persist:
     def __get_nodes(data: pd.DataFrame) -> dict:
         """
 
-        :param data: A frame wherein each field's data is the data of a distinct gauge, and the
-                     gauges belong to the same catchment.
+        :param data: The data of a gauge
         :return:
         """
 
