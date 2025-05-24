@@ -30,34 +30,26 @@ class Interface:
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
 
         # Metadata
-        metadata = src.transfer.metadata.Metadata(connector=connector)
-        self.__points = metadata.exc(name='points.json')
-        self.__menu = metadata.exc(name='menu.json')
+        self.__metadata = src.transfer.metadata.Metadata(connector=connector)
 
         # Instances
         self.__configurations = config.Config()
         self.__dictionary = src.transfer.dictionary.Dictionary()
 
-    def __get_metadata(self, string: str):
+    def __get_metadata(self, frame: pd.DataFrame) -> pd.DataFrame:
         """
 
-        :param string:
+        :param frame:
         :return:
         """
+        __points = self.__metadata.exc(name='points.json')
+        __menu = self.__metadata.exc(name='menu.json')
 
-        logging.info('METADATA: %s', type(self.__menu.get('annual')))
+        frame = frame.assign(
+            metadata = frame['section'].apply(
+                lambda x: __points if x == 'points' else __menu))
 
-        match string:
-            case 'menu/annual':
-                return self.__menu.get('annual')
-            case 'menu/contrasts':
-                return self.__menu.get('contrasts')
-            case 'points/annual':
-                return self.__points.get('annual')
-            case 'points/contrasts':
-                return self.__points.get('contrasts')
-            case _:
-                raise ValueError(f'{string} is invalid')
+        return frame
 
     def exc(self):
         """
@@ -67,12 +59,11 @@ class Interface:
 
         # The strings for transferring data to Amazon S3 (Simple Storage Service)
         strings: pd.DataFrame = self.__dictionary.exc(
-            path=self.__configurations.measurements_,
+            path=self.__configurations.measures_,
             extension='json', prefix=self.__configurations.prefix + '/')
 
-        # Metadata ->
-        strings: pd.DataFrame = strings.assign(
-            metadata = strings['section'].apply(self.__get_metadata))
+        # Adding metadata details per instance
+        strings = self.__get_metadata(frame=strings.copy())
         logging.info(strings)
 
         # Transfer
