@@ -18,17 +18,17 @@ class Config:
         """
 
         self.warehouse: str = os.path.join(os.getcwd(), 'warehouse')
-        self.measurements_ = os.path.join(self.warehouse, 'measurements')
-        self.points_ = os.path.join(self.measurements_, 'points')
-        self.menu_ = os.path.join(self.measurements_, 'menu')
+        self.measures_ = os.path.join(self.warehouse, 'measures')
+        self.points_ = os.path.join(self.measures_, 'points')
+        self.menu_ = os.path.join(self.measures_, 'menu')
 
         # Template
         self.s3_parameters_key = 's3_parameters.yaml'
-        self.arguments_key = 'measurements/arguments.json'
-        self.metadata_ = 'measurements/external'
+        self.arguments_key = 'measures/arguments.json'
+        self.metadata_ = 'measures/external'
 
         # The prefix of the Amazon repository where the quantiles will be stored
-        self.prefix = 'warehouse/measurements'
+        self.prefix = 'warehouse/measures'
 
         # Times
         starting = datetime.datetime.strptime('2024-02-29 00:00:00', '%Y-%m-%d %H:%M:%S')
