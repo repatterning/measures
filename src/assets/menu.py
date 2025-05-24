@@ -5,7 +5,6 @@ import os
 import pandas as pd
 
 import config
-import src.functions.directories
 import src.functions.objects
 
 
@@ -20,8 +19,6 @@ class Menu:
         """
 
         self.__configurations = config.Config()
-
-        self.__directories = src.functions.directories.Directories()
         self.__objects = src.functions.objects.Objects()
 
     def __menu(self, reference: pd.DataFrame):
