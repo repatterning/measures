@@ -30,7 +30,7 @@ class Config:
         # The prefix of the Amazon repository where the quantiles will be stored
         self.prefix = 'warehouse/measures'
 
-        # Times
+        # A shift for addressing the absence of 29 February during a common year
         starting = datetime.datetime.strptime('2024-02-29 00:00:00', '%Y-%m-%d %H:%M:%S')
         ending = datetime.datetime.strptime('2024-03-01 00:00:00', '%Y-%m-%d %H:%M:%S')
         timespan = ending - starting
@@ -38,4 +38,5 @@ class Config:
 
         self.shift = int(1000 * timespan.total_seconds())
 
+        # The underlying reference year for comparing values - at the same time point across years - is a leap year
         self.leap = '2024-01-01'
