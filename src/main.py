@@ -24,6 +24,9 @@ def main():
     src.split.interface.Interface(
         listings=listings, reference=reference, arguments=arguments).exc(partitions=partitions)
 
+    src.continuous.interface.Interface(
+        service=service, s3_parameters=s3_parameters, arguments=arguments).exc(partitions=partitions, reference=reference)
+
     # Transferring calculations to an Amazon S3 (Simple Storage Service) bucket
     src.transfer.interface.Interface(
         connector=connector, service=service, s3_parameters=s3_parameters).exc()
@@ -44,15 +47,15 @@ if __name__ == '__main__':
                         datefmt='%Y-%m-%d %H:%M:%S')
 
     # Modules
-    import src.split.interface
     import src.assets.interface
-
+    import src.continuous.interface
     import src.elements.s3_parameters as s3p
     import src.elements.service as sr
     import src.functions.cache
     import src.preface.interface
-    import src.transfer.interface
     import src.specific
+    import src.split.interface
+    import src.transfer.interface
 
     specific = src.specific.Specific()
     parser = argparse.ArgumentParser()
