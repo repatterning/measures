@@ -1,6 +1,6 @@
 """Module splits.py"""
 import pandas as pd
-import src.annual.data
+import src.split.data
 
 
 class Splits:
@@ -13,7 +13,7 @@ class Splits:
         Constructor
         """
 
-        self.__data = src.annual.data.Data()
+        self.__data = src.split.data.Data()
 
 
     def exc(self, listing: pd.DataFrame) -> pd.DataFrame:
