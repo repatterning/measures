@@ -21,7 +21,7 @@ def main():
     partitions, listings, reference = src.assets.interface.Interface(
         service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
 
-    src.annual.interface.Interface(
+    src.split.interface.Interface(
         listings=listings, reference=reference, arguments=arguments).exc(partitions=partitions)
 
     # Transferring calculations to an Amazon S3 (Simple Storage Service) bucket
@@ -44,7 +44,7 @@ if __name__ == '__main__':
                         datefmt='%Y-%m-%d %H:%M:%S')
 
     # Modules
-    import src.annual.interface
+    import src.split.interface
     import src.assets.interface
 
     import src.elements.s3_parameters as s3p
