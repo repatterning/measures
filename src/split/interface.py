@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 
 import src.elements.partitions as pr
-import src.annual.splits
-import src.annual.persist
+import src.split.splits
+import src.split.persist
 
 
 class Interface:
@@ -51,8 +51,8 @@ class Interface:
         )
 
         # Delayed Tasks
-        __get_splits = dask.delayed(src.annual.splits.Splits().exc)
-        __persist = dask.delayed(src.annual.persist.Persist(
+        __get_splits = dask.delayed(src.split.splits.Splits().exc)
+        __persist = dask.delayed(src.split.persist.Persist(
             reference=self.__reference, frequency=self.__arguments.get('frequency')).exc)
 
         # Compute: Each gauge has a data set/file per year

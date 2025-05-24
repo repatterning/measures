@@ -26,7 +26,7 @@ class Persist:
 
         # The storage area
         self.__configurations = config.Config()
-        self.__endpoint = os.path.join(self.__configurations.points_, 'contrasts')
+        self.__endpoint = os.path.join(self.__configurations.points_, 'split')
 
         # Ensure the storage area exists
         src.functions.directories.Directories().create(self.__endpoint)
@@ -38,55 +38,52 @@ class Persist:
     def __get_nodes(data: pd.DataFrame) -> dict:
         """
 
-        :param data: A frame wherein each field's data is the data of a distinct gauge, and the
-                     gauges belong to the same catchment.
+        :param data: The data of a gauge
         :return:
         """
 
-        names = []
-        blocks = []
-        for column in data.columns:
-            string = data[column].to_json(orient='split')
-            dictionary = json.loads(string)
-            names.append(int(dictionary['name']))
-            blocks.append(dictionary['data'])
+        frame = data.copy().drop(columns='milliseconds')
 
-        nodes = {'names': names, 'data': blocks}
+        dictionaries = [json.loads(data[column].to_json(orient='split')) for column in frame.columns]
+        periods = [dictionaries[i]['name'] for i in range(len(dictionaries))]
+        sections = [dictionaries[i]['data'] for i in range(len(dictionaries))]
+
+        nodes = {'periods': periods, 'data': sections}
 
         return nodes
 
-    def __get_attributes(self, catchment_id: int) -> pd.DataFrame:
+    def __get_attributes(self, ts_id: int) -> pd.DataFrame:
         """
 
-        :param catchment_id:
+        :param ts_id:
         :return:
         """
 
-        frame: pd.DataFrame = self.__reference.loc[self.__reference['catchment_id'] == catchment_id, :]
+        frame: pd.DataFrame = self.__reference.loc[self.__reference['ts_id'] == ts_id, :]
         attributes = frame.copy().drop_duplicates(ignore_index=True)
 
-        return attributes.set_index(keys='ts_id')
+        return attributes
 
-    def exc(self, data: pd.DataFrame, catchment_id: int) -> str:
+    def exc(self, splits: pd.DataFrame, ts_id: int) -> str:
         """
 
-        :param data:
-        :param catchment_id:
+        :param splits:
+        :param ts_id:
         :return:
         """
 
-        # Nodes
-        nodes = self.__get_nodes(data=data.copy())
+        # Nodes vis-à-vis the data fields only
+        nodes = self.__get_nodes(data=splits.copy())
 
         # Attributes
-        attributes = self.__get_attributes(catchment_id=catchment_id)
+        attributes = self.__get_attributes(ts_id=ts_id)
 
         # Hence
-        nodes['starting'] = int(data.index.min())
+        nodes['starting'] = self.__configurations.leap
         nodes['interval'] = self.__interval
         nodes['attributes'] = attributes.to_dict(orient='split')
 
         message = self.__objects.write(
-            nodes=nodes, path=os.path.join(self.__endpoint, f'{str(catchment_id)}.json'))
+            nodes=nodes, path=os.path.join(self.__endpoint, f'{str(ts_id)}.json'))
 
         return message

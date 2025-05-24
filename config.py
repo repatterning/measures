@@ -18,19 +18,19 @@ class Config:
         """
 
         self.warehouse: str = os.path.join(os.getcwd(), 'warehouse')
-        self.measurements_ = os.path.join(self.warehouse, 'measurements')
-        self.points_ = os.path.join(self.measurements_, 'points')
-        self.menu_ = os.path.join(self.measurements_, 'menu')
+        self.measures_ = os.path.join(self.warehouse, 'measures')
+        self.points_ = os.path.join(self.measures_, 'points')
+        self.menu_ = os.path.join(self.measures_, 'menu')
 
         # Template
         self.s3_parameters_key = 's3_parameters.yaml'
-        self.arguments_key = 'measurements/arguments.json'
-        self.metadata_ = 'measurements/external'
+        self.arguments_key = 'measures/arguments.json'
+        self.metadata_ = 'measures/external'
 
         # The prefix of the Amazon repository where the quantiles will be stored
-        self.prefix = 'warehouse/measurements'
+        self.prefix = 'warehouse/measures'
 
-        # Times
+        # A shift for addressing the absence of 29 February during a common year
         starting = datetime.datetime.strptime('2024-02-29 00:00:00', '%Y-%m-%d %H:%M:%S')
         ending = datetime.datetime.strptime('2024-03-01 00:00:00', '%Y-%m-%d %H:%M:%S')
         timespan = ending - starting
@@ -38,4 +38,5 @@ class Config:
 
         self.shift = int(1000 * timespan.total_seconds())
 
+        # The underlying reference year for comparing values - at the same time point across years - is a leap year
         self.leap = '2024-01-01'

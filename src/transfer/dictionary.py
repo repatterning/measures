@@ -51,7 +51,7 @@ class Dictionary:
 
         # Building the Amazon S3 strings
         frame = local.assign(key=prefix + local["vertex"])
-        frame.loc[:, 'section'] = local['vertex'].str.rsplit(pat=os.sep, n=1, expand=True)[0]
+        frame.loc[:, 'section'] = local['vertex'].str.split(pat=os.sep, n=1, expand=True)[0]
         logging.info(frame)
 
         return frame[['file', 'key', 'section']]
