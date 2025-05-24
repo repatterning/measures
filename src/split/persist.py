@@ -26,7 +26,7 @@ class Persist:
 
         # The storage area
         self.__configurations = config.Config()
-        self.__endpoint = os.path.join(self.__configurations.points_, 'annual')
+        self.__endpoint = os.path.join(self.__configurations.points_, 'split')
 
         # Ensure the storage area exists
         src.functions.directories.Directories().create(self.__endpoint)
