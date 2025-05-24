@@ -24,7 +24,7 @@ class Menu:
         self.__directories = src.functions.directories.Directories()
         self.__objects = src.functions.objects.Objects()
 
-    def __annual(self, reference: pd.DataFrame):
+    def __menu(self, reference: pd.DataFrame):
         """
 
         :param reference:
@@ -33,36 +33,14 @@ class Menu:
 
         excerpt = reference.copy().sort_values(by=['catchment_name', 'station_name'], ascending=True)
 
-        # Storage
-        path = os.path.join(self.__configurations.menu_, 'annual')
-        self.__directories.create(path=path)
-
         # Menu
         names = (excerpt['station_name'] + '/' + excerpt['catchment_name']).to_numpy()
         frame = pd.DataFrame(data={'desc': excerpt['ts_id'].to_numpy(), 'name': names})
         nodes = frame.to_dict(orient='records')
 
         return self.__objects.write(
-            nodes=nodes, path=os.path.join(path, 'menu.json'))
+            nodes=nodes, path=os.path.join(self.__configurations.menu_, 'menu.json'))
 
-    def __contrasts(self, reference: pd.DataFrame):
-        """
-
-        :param reference:
-        :return:
-        """
-
-        # Storage
-        path = os.path.join(self.__configurations.menu_, 'contrasts')
-        self.__directories.create(path=path)
-
-        # Menu
-        excerpt = reference.copy()[['catchment_id', 'catchment_name']].drop_duplicates()
-        excerpt.sort_values(by='catchment_name', ascending=True, inplace=True)
-        nodes = excerpt.to_dict(orient='records')
-
-        return self.__objects.write(
-            nodes=nodes, path=os.path.join(path, 'menu.json'))
 
     def exc(self, reference: pd.DataFrame):
         """
@@ -71,5 +49,6 @@ class Menu:
         :return:
         """
 
-        for message in (self.__annual(reference=reference), self.__contrasts(reference=reference)):
-            logging.info('Graphing Menu ->\n%s', message)
+        message = self.__menu(reference=reference)
+
+        logging.info('Graphing Menu ->\n%s', message)
