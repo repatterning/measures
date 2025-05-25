@@ -60,7 +60,7 @@ class Persist:
         """
 
         frame: pd.DataFrame = self.__reference.loc[self.__reference['ts_id'] == ts_id, :]
-        attributes = frame.copy().drop_duplicates(ignore_index=True)
+        attributes: pd.DataFrame = frame.copy().drop_duplicates(ignore_index=True)
 
         return attributes
 
@@ -81,7 +81,7 @@ class Persist:
         # Hence
         nodes['starting'] = self.__configurations.leap
         nodes['interval'] = self.__interval
-        nodes['attributes'] = attributes.to_dict(orient='split')
+        nodes['attributes'] = attributes.iloc[0, :].to_dict()
 
         message = self.__objects.write(
             nodes=nodes, path=os.path.join(self.__endpoint, f'{str(ts_id)}.json'))
