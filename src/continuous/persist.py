@@ -1,6 +1,8 @@
 """Module persist.py"""
+import datetime
 import json
 import os
+import time
 
 import pandas as pd
 
@@ -60,10 +62,29 @@ class Persist:
 
         return {'data': _data}
 
-    def exc(self, data: pd.DataFrame, partition: pr.Partitions) -> str:
+    @staticmethod
+    def __get_spreads(spreads: pd.DataFrame) -> dict:
+        """
+
+        :param spreads:
+        :return:
+        """
+
+        spreads.sort_values(by='datestr', ascending=True, inplace=True)
+        string = spreads[['low', 'high']].to_json(orient='split')
+        _data = json.loads(string)['data']
+
+        # Starting
+        minimum: datetime.date = spreads['datestr'].min()
+        milliseconds = 1000 * time.mktime(minimum.timetuple())
+
+        return {'data': _data, 'interval': 24 * 60 * 60 * 1000, 'starting': int(milliseconds)}
+
+    def exc(self, data: pd.DataFrame, spreads: pd.DataFrame, partition: pr.Partitions) -> str:
         """
 
         :param data:
+        :param spreads:
         :param partition:
         :return:
         """
@@ -71,10 +92,10 @@ class Persist:
         data.sort_values(by='timestamp', inplace=True)
 
         nodes = self.__get_nodes(data=data)
-
         nodes['interval'] = self.__interval
         nodes['starting'] = int(data['timestamp'].min())
         nodes['attributes'] = self.__get_attributes(ts_id=partition.ts_id)
+        nodes['spreads'] = self.__get_spreads(spreads=spreads.copy())
 
         message = self.__objects.write(
             nodes=nodes, path=os.path.join(self.__endpoint, f'{partition.ts_id}.json'))
