@@ -72,7 +72,6 @@ class Data:
         block = self.__get_data(keys=keys)
 
         # Append a date of the format datetime64[]
-        # block['date'] = pd.to_datetime(block['timestamp'], unit='ms')
-        # block['datestr'] = block['date'].dt.date
+        block['datestr'] = pd.to_datetime(block['timestamp'], unit='ms').dt.date
 
-        return block[['timestamp', 'measure']]
+        return block[['timestamp', 'measure', 'datestr']]
