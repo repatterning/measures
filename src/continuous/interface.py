@@ -29,19 +29,6 @@ class Interface:
         self.__s3_parameters = s3_parameters
         self.__arguments = arguments
 
-    @dask.delayed
-    def __spreads(self, data: pd.DataFrame) -> pd.DataFrame:
-        """
-
-        :param data:
-        :return:
-        """
-
-        spreads = data[['measure', 'datestr']].groupby(by='datestr').agg(low=('measure', 'min'), high=('measure', 'max'))
-        spreads.reset_index(drop=False, inplace=True)
-
-        return spreads
-
     def exc(self, partitions: list[pr.Partitions], reference: pd.DataFrame):
         """
 
@@ -60,8 +47,7 @@ class Interface:
         computations = []
         for partition in partitions:
             data = __data(partition=partition)
-            spreads = self.__spreads(data=data)
-            message = __persist(data=data, spreads=spreads, partition=partition)
+            message = __persist(data=data, partition=partition)
             computations.append(message)
         messages = dask.compute(computations, scheduler='threads')[0]
 
