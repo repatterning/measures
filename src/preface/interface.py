@@ -1,6 +1,5 @@
 """Module interface.py"""
 import typing
-import logging
 
 import boto3
 
@@ -34,7 +33,6 @@ class Interface:
         key_name = self.__configurations.arguments_key
 
         arguments =  src.s3.configurations.Configurations(connector=connector).objects(key_name=key_name)
-        logging.info(arguments)
 
         return arguments
 
